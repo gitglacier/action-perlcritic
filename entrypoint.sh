@@ -38,7 +38,9 @@ temp_file=$(mktemp)
 for x in $FILES
 do
    # check-perl essentially does "perl -cw", but also looks for "-T" (taint)
-   ./scripts/bin/check-perl-porcelain $x |& perl -pe "$SUBSTR" >>$temp_file
+   ./scripts/bin/check-perl-porcelain $x |&  # |& makes STDERR go into STDOUT.
+      perl -pe "$SUBSTR" |                   # Puts it into reviewdog efm format below.
+      perl -pe "s|^-:|$x:|" >>$temp_file     # Replaces "-" with the current filename we're checking.
 done
 
 cat ${temp_file} |
