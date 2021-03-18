@@ -1,12 +1,12 @@
-# We used debian:jessie below to build a docker image,
-# then use that image below to speed up GitHub Actions.
-#
-#FROM debian:jessie
-FROM dockerglacier/action-perlcritic:base
+#!/bin/bash
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git unzip wget jq cpanminus build-essential make \
+# Move to the action path
+cd ${GITHUB_ACTION_PATH}
+
+export ACCEPT_EULA=Y
+sudo -E apt-get update && \
+sudo -E apt-get install -y git unzip wget jq cpanminus build-essential make openssl cpanminus && \
+sudo -E apt-get install \
     libtest-perl-critic-perl \
     libalgorithm-c3-perl \
     libalgorithm-diff-perl \
@@ -236,17 +236,89 @@ RUN apt-get update && \
     libxml-simple-perl \
     libxml-twig-perl \
     libxml-xpathengine-perl \
-    libyaml-libyaml-perl
+    libyaml-libyaml-perl \
+    libtest-trap-perl \
+    libouch-perl \
+    libsys-sigaction-perl \
+    libemail-sender-perl \
+    libmail-checkuser-perl \
+    libcrypt-openssl-x509-perl \
+    libhtml-formfu-perl \
+    libfile-flock-perl \
+    libfile-flock-retry-perl \
+    libdate-manip-perl \
+    libpdf-reuse-perl \
+    libconfig-crontab-perl \
+    libhtml-treebuilder-xpath-perl \
+    libxml-dom-perl \
+    libjson-maybexs-perl \
+    libaws-signature4-perl \
+    libsoap-lite-perl \
+    librouter-simple-perl \
+    liblist-allutils-perl \
+    libio-socket-timeout-perl \
+    libxml-hash-lx-perl \
+    libtime-parsedate-perl \
+    libschedule-cron-events-perl \
+    libfile-sharedir-install-perl \
+    libscalar-list-utils-perl \
+    libevent-perl \
+    libtest-sharedfork-perl \
+    libdata-structure-util-perl \
+    libmodule-build-tiny-perl \
+    libextutils-config-perl \
+    libextutils-installpaths-perl \
+    libextutils-helpers-perl \
+    libjson-webtoken-perl \
+    libtext-pdf-perl \
+    libfont-ttf-perl \
+    libwww-mechanize-perl \
+    libwww-perl \
+    libarchive-zip-perl \
+    libtest-longstring-perl \
+    libhtml-selector-xpath-perl \
+    libio-sessiondata-perl \
+    libcrypt-ssleay-perl \
+    libclass-accessor-lite-perl \
+    libmoosex-getopt-perl \
+    libmoosex-classattribute-perl \
+    liburl-encode-perl \
+    libfile-homedir-perl \
+    liburi-template-perl \
+    libthrowable-perl \
+    libmoosex-util-perl \
+    libautobox-core-perl \
+    libautobox-perl \
+    libscope-guard-perl \
+    libtest-fatal-perl \
+    libmoosex-meta-typeconstraint-mooish-perl \
+    libconfig-ini-perl \
+    libmixin-linewise-perl \
+    libperlio-utf8-strict-perl \
+    libmodule-find-perl \
+    libdata-compare-perl \
+    libcache-cache-perl \
+    libyaml-perl \
+    liburi-encode-perl \
+    libmoosex-params-validate-perl \
+    libmoosex-log-log4perl-perl \
+    libio-socket-timeout-perl \
+    libperlio-via-timeout-perl \
+    libtest-tcp-perl \
+    libjson-rpc-perl \
+    libdevel-callsite-perl \
+    libxml-parser-perl
 
-COPY debdir /debdir
+export REVIEWDOG_VERSION=v0.10.0
+wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sudo sh -s -- -b /usr/local/bin/ ${REVIEWDOG_VERSION}
 
-ENV REVIEWDOG_VERSION=v0.10.0
-RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b /usr/local/bin/ ${REVIEWDOG_VERSION}
+# Install debs from perlcritic repo
+#debdir is from puppet:/modules/custom_debs/files
+echo "## install debdir"
+for pkg in debdir/*.deb; do
+  echo "Installing Package: $pkg"
+  sudo -E dpkg -i $PWD/$pkg
+done
 
-ADD .perlcriticrc /.perlcriticrc
-
-#RUN wget -O /cpanfile -q https://raw.githubusercontent.com/gitglacier/nf-web/master/cpanfile
-#RUN cpanm --installdeps /cpanfile
-
-ADD entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+# Copy our perlcritic file to the workspace
+cp -av .perlcriticrc ${GITHUB_WORKSPACE}/

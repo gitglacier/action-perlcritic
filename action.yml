@@ -1,6 +1,6 @@
 name: 'GitHub Action for Perl Critic'
 description: 'Run Perl Critic on your codebase.'
-author: Difegue
+author: gitglacier
 branding:
   color: blue
   icon: eye
@@ -13,5 +13,21 @@ inputs:
     description: 'GITHUB_TOKEN.'
     default: '${{ github.token }}'
 runs:
-  using: docker
-  image: Dockerfile
+  using: composite
+  steps:
+    - run: |
+        export INPUT_GITHUB_TOKEN=${{ inputs.github_token }};
+        FILEPATH="${{ github.action_path }}/setup.sh"
+        if [ -f "$FILEPATH" ]; then
+          chmod +x $FILEPATH
+          $FILEPATH
+        fi
+      shell: bash
+    - run: |
+        export INPUT_GITHUB_TOKEN=${{ inputs.github_token }};
+        FILEPATH="${{ github.action_path }}/entrypoint.sh"
+        if [ -f "$FILEPATH" ]; then
+          chmod +x $FILEPATH
+          $FILEPATH
+        fi
+      shell: bash

@@ -1,10 +1,7 @@
 #!/bin/bash
 
+# Move to our main repo
 cd ${GITHUB_WORKSPACE}
-
-#debdir is from puppet:/modules/custom_debs/files
-echo "## install debdir"
-dpkg -i /debdir/*.deb
 
 echo "## reviewdog --version"
 reviewdog --version
@@ -16,15 +13,15 @@ echo "## cpanm -V"
 cpanm -V
 
 echo "## Running cpanm --installdeps ."
-cpanm --installdeps --force --notest . 
+cpanm --installdeps --force --notest .
 
+export PERL5LIB="${PERL5LIB}:$PWD/modules"
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
-export PERL5LIB="${GITHUB_WORKSPACE}/modules"
 FILES=`git diff --name-only origin/master | grep -P "(\.pl|\.pm|\.cgi)$"`
 
 echo "## Running perlcritic"
-perlcritic --gentle --profile /.perlcriticrc $FILES |
-    reviewdog -name="perlcritic" -filter-mode=file -efm="%f:%l:%c:%m" -reporter="github-pr-check"
+perlcritic --gentle --profile .perlcriticrc $FILES |
+    reviewdog -name="perlCritic" -filter-mode=file -efm="%f:%l:%c:%m" -reporter="github-pr-check"
 
 #export ESC_GITHUB_WORKSPACE=$(echo "$GITHUB_WORKSPACE" | perl -pe 's/\//\\\//g')
 
@@ -44,6 +41,6 @@ do
 done
 
 cat ${temp_file} |
-   reviewdog -name="perl-syntax" -filter-mode=file  -efm="%f:%l:%m" -reporter="github-pr-check"
+   reviewdog -name="perlSyntax" -filter-mode=file  -efm="%f:%l:%m" -reporter="github-pr-check"
 
 rm ${temp_file}
