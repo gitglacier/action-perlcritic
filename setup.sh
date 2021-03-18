@@ -5,7 +5,7 @@ cd ${GITHUB_ACTION_PATH}
 
 export ACCEPT_EULA=Y
 sudo -E apt-get update && \
-sudo -E apt-get install -y git unzip wget jq cpanminus build-essential make cpanminus && \
+sudo -E apt-get install -y git unzip wget jq cpanminus build-essential make cpanminus multiarch-support
 #sudo -E apt-get install \
     libtest-perl-critic-perl \
     libalgorithm-c3-perl \
