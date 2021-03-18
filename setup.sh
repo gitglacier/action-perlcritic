@@ -325,4 +325,4 @@ cp -av .perlcriticrc ${GITHUB_WORKSPACE}/
 
 wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb
 wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl-dev_1.0.1t-1+deb8u12_amd64.deb
-dpkg -i libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb libssl-dev_1.0.1t-1+deb8u12_amd64.deb
+sudo dpkg -i libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb libssl-dev_1.0.1t-1+deb8u12_amd64.deb
