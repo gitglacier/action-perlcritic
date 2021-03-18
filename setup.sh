@@ -5,8 +5,8 @@ cd ${GITHUB_ACTION_PATH}
 
 export ACCEPT_EULA=Y
 sudo -E apt-get update && \
-sudo -E apt-get install -y git unzip wget jq cpanminus build-essential make openssl cpanminus && \
-sudo -E apt-get install \
+sudo -E apt-get install -y git unzip wget jq cpanminus build-essential make cpanminus && \
+#sudo -E apt-get install \
     libtest-perl-critic-perl \
     libalgorithm-c3-perl \
     libalgorithm-diff-perl \
@@ -322,3 +322,7 @@ done
 
 # Copy our perlcritic file to the workspace
 cp -av .perlcriticrc ${GITHUB_WORKSPACE}/
+
+wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb
+wget http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl-dev_1.0.1t-1+deb8u12_amd64.deb
+dpkg -i libssl1.0.0_1.0.1t-1+deb8u12_amd64.deb libssl-dev_1.0.1t-1+deb8u12_amd64.deb
