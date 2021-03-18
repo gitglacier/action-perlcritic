@@ -14,6 +14,8 @@ echo "## perlcritic --version"
 perlcritic --version
 echo "## cpanm -V"
 cpanm -V
+echo "## openssl version"
+dpkg -l | grep -i openssl
 
 echo "## Running cpanm --installdeps ."
 cpanm --installdeps --force --notest . 
