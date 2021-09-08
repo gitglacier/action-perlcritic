@@ -9,11 +9,6 @@ echo "## perl --version"
 perl --version
 echo "## perlcritic --version"
 perlcritic --version
-echo "## cpanm -V"
-cpanm -V
-
-echo "## Running cpanm --installdeps ."
-cpanm --installdeps --force --notest .
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 export PERL5LIB="${GITHUB_WORKSPACE}/modules"
