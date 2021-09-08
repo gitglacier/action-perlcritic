@@ -16,9 +16,9 @@ runs:
   using: composite
   steps:
     - run: |
-        export COMPOSITE_ROOT="$PWD";
+        export COMPOSITE_ROOT="${{ github.action_path }}";
         export INPUT_GITHUB_TOKEN=${{ inputs.github_token }};
-        FILEPATH="${{ github.action_path }}/entrypoint.sh"
+        FILEPATH="${COMPOSITE_ROOT}/entrypoint.sh"
         if [ -f "$FILEPATH" ]; then
           chmod +x $FILEPATH
           $FILEPATH
