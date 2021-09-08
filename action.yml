@@ -22,6 +22,7 @@ runs:
         if [ -f "$FILEPATH" ]; then
           chmod +x $FILEPATH
           $FILEPATH
+          exit $?
         else
           # Exit as not found ( in bash exit code )
           exit 127
