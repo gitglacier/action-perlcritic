@@ -1,6 +1,5 @@
 #!/bin/bash
 
-ENTRYPATH="$PWD"
 cd ${GITHUB_WORKSPACE}
 
 echo "## reviewdog --version"
@@ -15,7 +14,7 @@ export PERL5LIB="${GITHUB_WORKSPACE}/modules"
 FILES=`git diff --name-only origin/master | grep -P "(\.pl|\.pm|\.cgi)$"`
 
 echo "## Running perlcritic"
-perlcritic --gentle --profile "${ENTRYPATH}/.perlcriticrc" $FILES |
+perlcritic --gentle --profile "${COMPOSITE_ROOT}/.perlcriticrc" $FILES |
     reviewdog -name="perlcritic" -filter-mode=file -efm="%f:%l:%c:%m" -reporter="github-pr-check"
 
 #export ESC_GITHUB_WORKSPACE=$(echo "$GITHUB_WORKSPACE" | perl -pe 's/\//\\\//g')
