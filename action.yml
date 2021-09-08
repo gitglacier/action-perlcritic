@@ -13,5 +13,16 @@ inputs:
     description: 'GITHUB_TOKEN.'
     default: '${{ github.token }}'
 runs:
-  using: docker
-  image: Dockerfile
+  using: composite
+  steps:
+    - run: |
+        export INPUT_GITHUB_TOKEN=${{ inputs.github_token }};
+        FILEPATH="${{ github.action_path }}/entrypoint.sh"
+        if [ -f "$FILEPATH" ]; then
+          chmod +x $FILEPATH
+          $FILEPATH
+        else
+          # Exit as not found ( in bash exit code )
+          exit 127
+        fi
+      shell: bash

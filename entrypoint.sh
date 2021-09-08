@@ -1,10 +1,7 @@
 #!/bin/bash
 
+ENTRYPATH="$PWD"
 cd ${GITHUB_WORKSPACE}
-
-#debdir is from puppet:/modules/custom_debs/files
-echo "## install debdir"
-dpkg -i /debdir/*.deb
 
 echo "## reviewdog --version"
 reviewdog --version
@@ -16,14 +13,14 @@ echo "## cpanm -V"
 cpanm -V
 
 echo "## Running cpanm --installdeps ."
-cpanm --installdeps --force --notest . 
+cpanm --installdeps --force --notest .
 
 export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 export PERL5LIB="${GITHUB_WORKSPACE}/modules"
 FILES=`git diff --name-only origin/master | grep -P "(\.pl|\.pm|\.cgi)$"`
 
 echo "## Running perlcritic"
-perlcritic --gentle --profile /.perlcriticrc $FILES |
+perlcritic --gentle --profile "${ENTRYPATH}/.perlcriticrc" $FILES |
     reviewdog -name="perlcritic" -filter-mode=file -efm="%f:%l:%c:%m" -reporter="github-pr-check"
 
 #export ESC_GITHUB_WORKSPACE=$(echo "$GITHUB_WORKSPACE" | perl -pe 's/\//\\\//g')
